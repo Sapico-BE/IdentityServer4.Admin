@@ -1,4 +1,6 @@
-# AGENTS.md
+# AGENTS.md — Sapico IdentityServer4 Admin
+
+> Forked from [skoruba/IdentityServer4.Admin](https://github.com/skoruba/IdentityServer4.Admin), migrated to **.NET 10** and rebranded for **Sapico**.
 
 ## Purpose
 
@@ -32,9 +34,9 @@ Primary source folders:
 
 In Docker topology (see `docker-compose.yml`), nginx routes three public hostnames:
 
-- `https://admin.skoruba.local` -> Admin Web
-- `https://admin-api.skoruba.local` -> Admin API
-- `https://sts.skoruba.local` -> STS (IdentityServer + Identity UI)
+- `https://admin.sapico.local` -> Admin Web
+- `https://admin-api.sapico.local` -> Admin API
+- `https://sts.sapico.local` -> STS (IdentityServer + Identity UI)
 
 In local development defaults (appsettings):
 
@@ -138,3 +140,38 @@ Provider switching is configuration-driven via `DatabaseProviderConfiguration:Pr
 - If adjusting auth flows, evaluate impact on all three host apps.
 - For template-impacting changes, update both `src/*` and `templates/template-publish/content/src/*` where relevant.
 - Prefer documenting new architecture decisions in `docs/` and linking from `README.md`.
+
+## Docker Naming Convention
+
+All Docker image names **must** use the `saas-sapico-sts` prefix:
+
+| Service | Image | Container name |
+|---|---|---|
+| STS | `saas-sapico-sts` | `saas.sapico.sts.identityserver4` |
+| Admin UI | `saas-sapico-sts-admin` | `saas.sapico.sts.identityserver4.admin` |
+| Admin API | `saas-sapico-sts-admin-api` | `saas.sapico.sts.identityserver4.admin-api` |
+| Database | `postgres:18-alpine` | `saas.sapico.sts.identityserver4.db` |
+
+## CI/CD
+
+- GitHub Actions workflow: `.github/workflows/deploy.yml`
+- Triggers on `master` push
+- Publishes via `dotnet publish /t:PublishContainer` to `registry.sapico.me`
+- Three parallel deploy jobs: STS, Admin, Admin API
+
+## Technology Stack
+
+- **.NET 10** — do not downgrade target frameworks
+- **IdentityServer4** with ASP.NET Core Identity
+- **Entity Framework Core** — PostgreSQL default (SqlServer, MySql supported)
+- **Serilog** for structured logging
+- **Bootstrap 4** with Bootswatch theming
+- **xUnit** with Fluent Assertions and Bogus for tests
+
+## Coding Guidelines
+
+- Health checks: every service exposes `/healthz`; Docker Compose uses `CMD-SHELL curl` health checks.
+- Seed data: use `dotnet run /seed` or `SeedConfiguration` in `appsettings.json`.
+- Migrations: use `build/add-migrations.ps1 -migration <Name> -migrationProviderName <Provider>`.
+- Database provider switching: `DatabaseProviderConfiguration.ProviderType` in `appsettings.json`.
+- Integration tests use in-memory databases with cookie auth stubs.
