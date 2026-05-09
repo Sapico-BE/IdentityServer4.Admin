@@ -57,7 +57,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'bash -c "</dev/tcp/localhost/8080" || exit 1'
+        - 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1'
       interval: 5s
       timeout: 5s
       retries: 6
@@ -73,7 +73,7 @@ services:
 
   sts_admin:
     restart: unless-stopped
-    image: 'registry.sapico.me/saas-sapico-sts-admin:stable'
+    image: 'registry.sapico.me/saas-sapico-sts.admin:stable'
     command:
       - dotnet
       - Skoruba.IdentityServer4.Admin.dll
@@ -102,7 +102,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'bash -c "</dev/tcp/localhost/8080" || exit 1'
+        - 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1'
       interval: 5s
       timeout: 5s
       retries: 6
@@ -120,7 +120,7 @@ services:
 
   sts_admin_api:
     restart: unless-stopped
-    image: 'registry.sapico.me/saas-sapico-sts-admin-api:stable'
+    image: 'registry.sapico.me/saas-sapico-sts.admin.api:stable'
     command:
       - dotnet
       - Skoruba.IdentityServer4.Admin.Api.dll
@@ -141,7 +141,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'bash -c "</dev/tcp/localhost/8080" || exit 1'
+        - 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1'
       interval: 5s
       timeout: 5s
       retries: 6
