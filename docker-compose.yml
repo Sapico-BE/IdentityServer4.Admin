@@ -14,9 +14,9 @@ services:
       proxy: null
       identityserverui:
         aliases:
-          - sts.skoruba.local
-          - admin.skoruba.local
-          - admin-api.skoruba.local
+          - sts.sapico.local
+          - admin.sapico.local
+          - admin-api.sapico.local
     restart: always
   skoruba.identityserver4.admin:
     image: '${DOCKER_REGISTRY-}skoruba-identityserver4-admin'
@@ -25,23 +25,23 @@ services:
       dockerfile: src/Skoruba.IdentityServer4.Admin/Dockerfile
     container_name: skoruba-identityserver4-admin
     environment:
-      - VIRTUAL_HOST=admin.skoruba.local
+      - VIRTUAL_HOST=admin.sapico.local
       - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__AdminLogDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.skoruba.local'
-      - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.skoruba.local/signin-oidc'
-      - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
+      - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.sapico.local/signin-oidc'
+      - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
       - AdminConfiguration__RequireHttpsMetadata=false
-      - 'IdentityServerData__Clients__0__ClientUri=https://admin.skoruba.local'
-      - 'IdentityServerData__Clients__0__RedirectUris__0=https://admin.skoruba.local/signin-oidc'
-      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://admin.skoruba.local/signin-oidc'
-      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.skoruba.local/signout-callback-oidc'
-      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.skoruba.local'
-      - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.skoruba.local/swagger/oauth2-redirect.html'
+      - 'IdentityServerData__Clients__0__ClientUri=https://admin.sapico.local'
+      - 'IdentityServerData__Clients__0__RedirectUris__0=https://admin.sapico.local/signin-oidc'
+      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://admin.sapico.local/signin-oidc'
+      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.sapico.local/signout-callback-oidc'
+      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.sapico.local'
+      - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.sapico.local/swagger/oauth2-redirect.html'
       - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
@@ -63,10 +63,10 @@ services:
       dockerfile: src/Skoruba.IdentityServer4.Admin.Api/Dockerfile
     container_name: skoruba-identityserver4-admin-api
     environment:
-      - VIRTUAL_HOST=admin-api.skoruba.local
+      - VIRTUAL_HOST=admin-api.sapico.local
       - AdminApiConfiguration__RequireHttpsMetadata=false
-      - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.skoruba.local'
-      - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.skoruba.local'
+      - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.sapico.local'
+      - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
       - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
@@ -87,13 +87,13 @@ services:
       dockerfile: src/Skoruba.IdentityServer4.STS.Identity/Dockerfile
     container_name: skoruba-identityserver4-sts-identity
     environment:
-      - VIRTUAL_HOST=sts.skoruba.local
+      - VIRTUAL_HOST=sts.sapico.local
       - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.skoruba.local'
-      - 'IdentityServerOptions__IssuerUri=https://sts.skoruba.local'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
+      - 'IdentityServerOptions__IssuerUri=https://sts.sapico.local'
       - IdentityServerOptions__Events__RaiseErrorEvents=true
       - IdentityServerOptions__Events__RaiseInformationEvents=true
       - IdentityServerOptions__Events__RaiseFailureEvents=true
@@ -108,7 +108,7 @@ services:
     networks:
       identityserverui:
         aliases:
-          - sts.skoruba.local
+          - sts.sapico.local
   db:
     image: 'postgres:15-alpine'
     ports:
