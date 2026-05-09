@@ -94,6 +94,7 @@ services:
     networks:
       identityserverui: null
     restart: unless-stopped
+  skoruba.identityserver4.sts.identity:
     image: '${DOCKER_REGISTRY-}skoruba-identityserver4-sts-identity'
     build:
       context: .
