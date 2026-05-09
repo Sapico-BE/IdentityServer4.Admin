@@ -19,13 +19,13 @@ services:
           - admin-api.sapico.local
     restart: always
   saas.sapico.sts.identityserver4.admin:
-    image: '${DOCKER_REGISTRY-}saas-sapico-sts-admin'
+    image: '${DOCKER_REGISTRY-}saas-sapico-sts.admin'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.Admin/Dockerfile
     container_name: saas.sapico.sts.identityserver4.admin
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
+      test: ['CMD-SHELL', 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -66,13 +66,13 @@ services:
       identityserverui: null
     restart: unless-stopped
   saas.sapico.sts.identityserver4.admin-api:
-    image: '${DOCKER_REGISTRY-}saas-sapico-sts-admin-api'
+    image: '${DOCKER_REGISTRY-}saas-sapico-sts.admin.api'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.Admin.Api/Dockerfile
     container_name: saas.sapico.sts.identityserver4.admin-api
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
+      test: ['CMD-SHELL', 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -107,7 +107,7 @@ services:
       dockerfile: src/Skoruba.IdentityServer4.STS.Identity/Dockerfile
     container_name: saas.sapico.sts.identityserver4
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
+      test: ['CMD-SHELL', 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3

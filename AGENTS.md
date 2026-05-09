@@ -143,13 +143,13 @@ Provider switching is configuration-driven via `DatabaseProviderConfiguration:Pr
 
 ## Docker Naming Convention
 
-All Docker image names **must** use the `saas-sapico-sts` prefix:
+Docker image names use **`saas-sapico-sts`** as prefix with dot-separated suffixes (so `-` groups related images in the registry):
 
 | Service | Image | Container name |
 |---|---|---|
 | STS | `saas-sapico-sts` | `saas.sapico.sts.identityserver4` |
-| Admin UI | `saas-sapico-sts-admin` | `saas.sapico.sts.identityserver4.admin` |
-| Admin API | `saas-sapico-sts-admin-api` | `saas.sapico.sts.identityserver4.admin-api` |
+| Admin UI | `saas-sapico-sts.admin` | `saas.sapico.sts.identityserver4.admin` |
+| Admin API | `saas-sapico-sts.admin.api` | `saas.sapico.sts.identityserver4.admin-api` |
 | Database | `postgres:18-alpine` | `saas.sapico.sts.identityserver4.db` |
 
 ## CI/CD

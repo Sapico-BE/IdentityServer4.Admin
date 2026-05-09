@@ -25,7 +25,7 @@ jobs:
         run: dotnet build Skoruba.IdentityServer4.Admin.sln --no-restore --configuration Release
 
   deploy-sts:
-    name: Deploy STS Identity
+    name: Deploy saas-sapico-sts
     needs: build
     runs-on: ubuntu-latest
     container:
@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish STS Identity
+      - name: Publish saas-sapico-sts
         env:
           DOTNET_CONTAINER_REGISTRY_UNAME: ${{ secrets.DOCKER_USERNAME }}
           DOTNET_CONTAINER_REGISTRY_PWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -46,7 +46,7 @@ jobs:
             "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
 
   deploy-admin:
-    name: Deploy Admin
+    name: Deploy saas-sapico-sts.admin
     needs: build
     runs-on: ubuntu-latest
     container:
@@ -54,7 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish Admin
+      - name: Publish saas-sapico-sts.admin
         env:
           DOTNET_CONTAINER_REGISTRY_UNAME: ${{ secrets.DOCKER_USERNAME }}
           DOTNET_CONTAINER_REGISTRY_PWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -62,12 +62,12 @@ jobs:
           dotnet publish src/Skoruba.IdentityServer4.Admin/Skoruba.IdentityServer4.Admin.csproj \
             --os linux --arch x64 /t:PublishContainer \
             -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-sts-admin \
+            -p:ContainerRepository=saas-sapico-sts.admin \
             "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
             "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
 
   deploy-admin-api:
-    name: Deploy Admin API
+    name: Deploy saas-sapico-sts.admin.api
     needs: build
     runs-on: ubuntu-latest
     container:
@@ -75,7 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish Admin API
+      - name: Publish saas-sapico-sts.admin.api
         env:
           DOTNET_CONTAINER_REGISTRY_UNAME: ${{ secrets.DOCKER_USERNAME }}
           DOTNET_CONTAINER_REGISTRY_PWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -83,6 +83,6 @@ jobs:
           dotnet publish src/Skoruba.IdentityServer4.Admin.Api/Skoruba.IdentityServer4.Admin.Api.csproj \
             --os linux --arch x64 /t:PublishContainer \
             -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-sts-admin-api \
+            -p:ContainerRepository=saas-sapico-sts.admin.api \
             "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
             "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
