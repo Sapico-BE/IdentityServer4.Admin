@@ -89,6 +89,11 @@ namespace Skoruba.IdentityServer4.STS.Identity
                 {
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
+                // Health check endpoint for Docker orchestration
+                endpoint.MapGet("/healthz", async ctx => 
+                {
+                    await ctx.Response.WriteAsync("Healthy");
+                });
             });
         }
 

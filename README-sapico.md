@@ -12,7 +12,9 @@ The Sapico deployment uses **PostgreSQL 17** (Alpine-based) as the default datab
 - Database data is stored in a named Docker volume (`dbdata`)
 - Volume persists across container restarts and updates
 - To preserve data during upgrades: `docker-compose down` (data persists), then `docker-compose up --build` (volume remounts)
-
+**Database Health Checks:**
+- PostgreSQL container includes `pg_isready` health check
+- Checks every 10 seconds, with 5-second timeout and 5 retries before marked unhealthy
 **Changes made:**
 
 1. **appsettings.json files** – Updated `DatabaseProviderConfiguration.ProviderType` to `PostgreSQL`:
@@ -175,4 +177,23 @@ To upgrade PostgreSQL to a newer version:
    ```
 
 The named volume ensures all data is preserved during the upgrade.
+
+### Health Check Endpoints
+
+All services expose health check endpoints for Docker orchestration:
+
+- **Admin UI**: `GET http://localhost:80/healthz` (returns "Healthy")
+- **Admin API**: `GET http://localhost:80/healthz` (returns "Healthy")
+- **STS**: `GET http://localhost:80/healthz` (returns "Healthy")
+- **Database**: `pg_isready` check (checks PostgreSQL readiness)
+
+Detailed health checks with database connection verification are available at:
+- Admin UI & API: `GET /health` (UIResponseWriter format)
+- STS: `GET /health` (UIResponseWriter format)
+
+These endpoints are configured in `docker-compose.yml` with:
+- 30-second interval checks
+- 10-second timeout
+- 3 retries before marking unhealthy
+- 40-second startup grace period
 
