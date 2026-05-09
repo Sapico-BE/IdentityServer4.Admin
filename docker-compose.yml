@@ -18,20 +18,21 @@ services:
           - admin.sapico.local
           - admin-api.sapico.local
     restart: always
-  skoruba.identityserver4.admin:
-    image: '${DOCKER_REGISTRY-}skoruba-identityserver4-admin'
+  saas-sapico-admin:
+    image: '${DOCKER_REGISTRY-}saas-sapico-admin'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.Admin/Dockerfile
-    container_name: skoruba-identityserver4-admin
+    container_name: saas-sapico-admin
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:80/healthz || exit 1']
+      test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     environment:
       - VIRTUAL_HOST=admin.sapico.local
+      - VIRTUAL_PORT=8080
       - 'ConnectionStrings__ConfigurationDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__IdentityDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
@@ -53,8 +54,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     command: dotnet Skoruba.IdentityServer4.Admin.dll /seed
     depends_on:
-      - db
-      - skoruba.identityserver4.sts.identity
+      db:
+        condition: service_healthy
+      saas-sapico-sts:
+        condition: service_started
     volumes:
       - './shared/serilog.json:/app/serilog.json'
       - './shared/identitydata.json:/app/identitydata.json'
@@ -63,20 +66,21 @@ services:
     networks:
       identityserverui: null
     restart: unless-stopped
-  skoruba.identityserver4.admin.api:
-    image: '${DOCKER_REGISTRY-}skoruba-identityserver4-admin-api'
+  saas-sapico-admin-api:
+    image: '${DOCKER_REGISTRY-}saas-sapico-admin-api'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.Admin.Api/Dockerfile
-    container_name: skoruba-identityserver4-admin-api
+    container_name: saas-sapico-admin-api
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:80/healthz || exit 1']
+      test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     environment:
       - VIRTUAL_HOST=admin-api.sapico.local
+      - VIRTUAL_PORT=8080
       - AdminApiConfiguration__RequireHttpsMetadata=false
       - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.sapico.local'
       - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
@@ -91,23 +95,27 @@ services:
     volumes:
       - './shared/serilog.json:/app/serilog.json'
       - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       identityserverui: null
     restart: unless-stopped
-  skoruba.identityserver4.sts.identity:
-    image: '${DOCKER_REGISTRY-}skoruba-identityserver4-sts-identity'
+  saas-sapico-sts:
+    image: '${DOCKER_REGISTRY-}saas-sapico-sts'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.STS.Identity/Dockerfile
-    container_name: skoruba-identityserver4-sts-identity
+    container_name: saas-sapico-sts
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:80/healthz || exit 1']
+      test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     environment:
       - VIRTUAL_HOST=sts.sapico.local
+      - VIRTUAL_PORT=8080
       - 'ConnectionStrings__ConfigurationDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__IdentityDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
@@ -121,7 +129,8 @@ services:
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - './shared/serilog.json:/app/serilog.json'
       - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
@@ -134,14 +143,15 @@ services:
     image: 'postgres:18-alpine'
     ports:
       - '5432:5432'
-    container_name: skoruba-identityserver4-db
+    container_name: saas-sapico-db
     environment:
       POSTGRES_DB: 'IdentityServer4Admin'
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: '${DB_PASSWORD:-postgres}'
     volumes:
       # Named volume for persistent database storage across container updates
-      - 'dbdata:/var/lib/postgresql/data'
+      # PostgreSQL 18+ stores data in a major-version subdirectory under /var/lib/postgresql
+      - 'dbdata:/var/lib/postgresql'
     networks:
       identityserverui: null
     restart: unless-stopped
