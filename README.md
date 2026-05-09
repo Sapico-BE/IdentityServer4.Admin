@@ -4,6 +4,39 @@
 
 > The administration for the IdentityServer4 and Asp.Net Core Identity
 
+## Table of Contents
+
+- [Big Thanks and Project Update](#big-thanks--and-an-update-on-the-project-)
+- [Requirements](#requirements)
+- [Project Structure and App Documentation](#project-structure-and-app-documentation)
+- [Installation via dotnet new template](#installation-via-dotnet-new-template)
+- [How to configure the Administration - IdentityServer4 and Asp.Net Core Identity](#how-to-configure-the-administration---identityserver4-and-aspnet-core-identity)
+- [Configuration of Administration for Deployment](#configuration-of-administration-for-deployment)
+- [Administration UI preview](#administration-ui-preview)
+- [Cloning](#cloning)
+- [Running via Docker](#running-via-docker)
+- [Installation of the Client Libraries](#installation-of-the-client-libraries)
+- [Bundling and Minification](#bundling-and-minification)
+- [EF Core and Data Access](#ef-core--data-access)
+
+## Project Structure and App Documentation
+
+For a repository map and app-level documentation (including website/domain structure), see:
+
+- [AGENTS.md](AGENTS.md)
+
+Quick app overview:
+
+- `Skoruba.IdentityServer4.Admin`: Admin MVC UI host
+- `Skoruba.IdentityServer4.Admin.Api`: Admin REST API host (Swagger + health)
+- `Skoruba.IdentityServer4.STS.Identity`: STS host for IdentityServer4 + ASP.NET Core Identity
+
+Typical docker hostnames:
+
+- `admin.skoruba.local` (Admin UI)
+- `admin-api.skoruba.local` (Admin API)
+- `sts.skoruba.local` (STS)
+
 ## Big Thanks 🙏🏻 and an Update on the Project ⚡️
 
 I just want to say a huge **THANK YOU** to everyone who has contributed to **IdentityServer4.Admin** over the years. Reaching almost **4,000 stars** ⭐️ on GitHub has been such an incredible milestone, and it is all thanks to this **amazing community**. I truly could not have done it without you.
