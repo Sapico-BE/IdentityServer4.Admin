@@ -59,10 +59,7 @@ namespace Skoruba.IdentityServer4.Admin
                 endpoint.MapIdentityServer4AdminUI();
                 endpoint.MapIdentityServer4AdminUIHealthChecks();
                 // Health check endpoint for Docker orchestration
-                endpoint.MapGet("/healthz", async ctx => 
-                {
-                    await ctx.Response.WriteAsync("Healthy");
-                });
+                endpoint.MapGet("/healthz", () => "Healthy");
             });
         }
 
