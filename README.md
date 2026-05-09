@@ -33,9 +33,9 @@ Quick app overview:
 
 Typical docker hostnames:
 
-- `admin.skoruba.local` (Admin UI)
-- `admin-api.skoruba.local` (Admin API)
-- `sts.skoruba.local` (STS)
+- `admin.sapico.local` (Admin UI)
+- `admin-api.sapico.local` (Admin API)
+- `sts.sapico.local` (STS)
 
 ## Big Thanks 🙏🏻 and an Update on the Project ⚡️
 
@@ -66,7 +66,7 @@ Cheers,
 
 ## Requirements
 
-- [Install](https://www.microsoft.com/net/download/windows#/current) the latest .NET 6 SDK (using older versions may lead to 502.5 errors when hosted on IIS or application exiting immediately after starting when self-hosted)
+- [Install](https://dotnet.microsoft.com/download) the latest .NET 10 SDK
 
 ## Installation via dotnet new template
 
@@ -153,9 +153,9 @@ git clone https://github.com/skoruba/IdentityServer4.Admin
 
 ### DNS
 
-We need some resolving capabilities in order for the project to work. The domain `skoruba.local` is used here to represent the domain this setup is hosted on. The domain-name needs to be FQDN (fully qualified domain name).
+We need some resolving capabilities in order for the project to work. The domain `sapico.local` is used here to represent the domain this setup is hosted on. The domain-name needs to be FQDN (fully qualified domain name).
 
-Thus first, we need the domain `skoruba.local` to resolve to the docker-host machine. If you want this to work on your local machine only, use the first option.
+Thus first, we need the domain `sapico.local` to resolve to the docker-host machine. If you want this to work on your local machine only, use the first option.
 
 #### DNS on docker-host machine only
 
@@ -167,10 +167,10 @@ Edit your hosts file:
 and add the following entries:
 
 ```custom
-127.0.0.1 skoruba.local sts.skoruba.local admin.skoruba.local admin-api.skoruba.local
+127.0.0.1 sapico.local sts.sapico.local admin.sapico.local admin-api.sapico.local
 ```
 
-This way your host machine resolves `skoruba.local` and its subdomains to itself.
+This way your host machine resolves `sapico.local` and its subdomains to itself.
 
 ### Certificates
 
@@ -193,14 +193,14 @@ copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.pem
 copy $env:LOCALAPPDATA\mkcert\rootCA.pem ./cacerts.crt
 ```
 
-##### Create the `skoruba.local` certificates
+##### Create the `sapico.local` certificates
 
-Generate a certificate for `skoruba.local` with wildcards for the subdomains. The name of the certificate files need to match with actual domain-names in order for the nginx-proxy to pick them up correctly. We want both the crt-key and the pfx version.
+Generate a certificate for `sapico.local` with wildcards for the subdomains. The name of the certificate files need to match with actual domain-names in order for the nginx-proxy to pick them up correctly. We want both the crt-key and the pfx version.
 
 ```bash
 cd shared/nginx/certs
-mkcert -cert-file skoruba.local.crt -key-file skoruba.local.key skoruba.local *.skoruba.local
-mkcert -pkcs12 skoruba.local.pfx skoruba.local *.skoruba.local
+mkcert -cert-file sapico.local.crt -key-file sapico.local.key sapico.local *.sapico.local
+mkcert -pkcs12 sapico.local.pfx sapico.local *.sapico.local
 ```
 
 ##### This docker setup is come from this [repository](https://github.com/bravecobra/identityserver-ui) - thanks to [bravecobra](https://github.com/bravecobra). 😊

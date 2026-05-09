@@ -62,7 +62,7 @@ jobs:
           dotnet publish src/Skoruba.IdentityServer4.Admin/Skoruba.IdentityServer4.Admin.csproj \
             --os linux --arch x64 /t:PublishContainer \
             -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-admin \
+            -p:ContainerRepository=saas-sapico-sts-admin \
             "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
             "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
 
@@ -83,6 +83,6 @@ jobs:
           dotnet publish src/Skoruba.IdentityServer4.Admin.Api/Skoruba.IdentityServer4.Admin.Api.csproj \
             --os linux --arch x64 /t:PublishContainer \
             -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-admin-api \
+            -p:ContainerRepository=saas-sapico-sts-admin-api \
             "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
             "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""

@@ -6,11 +6,11 @@ Set-Location "../"
 docker-compose -f docker-compose.yml build
 
 # rename images with following tag
-docker tag skoruba-identityserver4-admin skoruba/identityserver4-admin:$version
-docker tag skoruba-identityserver4-sts-identity skoruba/identityserver4-sts-identity:$version
-docker tag skoruba-identityserver4-admin-api skoruba/identityserver4-admin-api:$version
+docker tag saas-sapico-sts-admin saas-sapico-sts-admin:$version
+docker tag saas-sapico-sts saas-sapico-sts:$version
+docker tag saas-sapico-sts-admin-api saas-sapico-sts-admin-api:$version
 
-# push to docker hub
-docker push skoruba/identityserver4-admin:$version
-docker push skoruba/identityserver4-admin-api:$version
-docker push skoruba/identityserver4-sts-identity:$version
+# push to registry
+docker push saas-sapico-sts-admin:$version
+docker push saas-sapico-sts-admin-api:$version
+docker push saas-sapico-sts:$version
