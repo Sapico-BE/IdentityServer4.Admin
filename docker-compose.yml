@@ -18,12 +18,12 @@ services:
           - admin.sapico.local
           - admin-api.sapico.local
     restart: always
-  saas-sapico-admin:
+  saas.sapico.sts.identityserver4.admin:
     image: '${DOCKER_REGISTRY-}saas-sapico-admin'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.Admin/Dockerfile
-    container_name: saas-sapico-admin
+    container_name: saas.sapico.sts.identityserver4.admin
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
       interval: 30s
@@ -33,13 +33,12 @@ services:
     environment:
       - VIRTUAL_HOST=admin.sapico.local
       - VIRTUAL_PORT=8080
-      - 'ConnectionStrings__ConfigurationDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__PersistedGrantDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__IdentityDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminLogDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminAuditLogDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__DataProtectionDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
+      - 'ConnectionStrings__ConfigurationDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__IdentityDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__AdminLogDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__DataProtectionDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.sapico.local/signin-oidc'
       - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
       - AdminConfiguration__RequireHttpsMetadata=false
@@ -49,14 +48,14 @@ services:
       - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.sapico.local/signout-callback-oidc'
       - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.sapico.local'
       - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.sapico.local/swagger/oauth2-redirect.html'
-      - 'Serilog__WriteTo__1__Args__connectionString=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'Serilog__WriteTo__1__Args__connectionString=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     command: dotnet Skoruba.IdentityServer4.Admin.dll /seed
     depends_on:
-      db:
+      saas.sapico.sts.identityserver4.db:
         condition: service_healthy
-      saas-sapico-sts:
+      saas.sapico.sts.identityserver4:
         condition: service_started
     volumes:
       - './shared/serilog.json:/app/serilog.json'
@@ -66,12 +65,12 @@ services:
     networks:
       identityserverui: null
     restart: unless-stopped
-  saas-sapico-admin-api:
+  saas.sapico.sts.identityserver4.admin-api:
     image: '${DOCKER_REGISTRY-}saas-sapico-admin-api'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.Admin.Api/Dockerfile
-    container_name: saas-sapico-admin-api
+    container_name: saas.sapico.sts.identityserver4.admin-api
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
       interval: 30s
@@ -84,29 +83,29 @@ services:
       - AdminApiConfiguration__RequireHttpsMetadata=false
       - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.sapico.local'
       - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
-      - 'ConnectionStrings__ConfigurationDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__PersistedGrantDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__IdentityDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminLogDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminAuditLogDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__DataProtectionDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__ConfigurationDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__IdentityDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__AdminLogDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__DataProtectionDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
       - './shared/serilog.json:/app/serilog.json'
       - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
     depends_on:
-      db:
+      saas.sapico.sts.identityserver4.db:
         condition: service_healthy
     networks:
       identityserverui: null
     restart: unless-stopped
-  saas-sapico-sts:
+  saas.sapico.sts.identityserver4:
     image: '${DOCKER_REGISTRY-}saas-sapico-sts'
     build:
       context: .
       dockerfile: src/Skoruba.IdentityServer4.STS.Identity/Dockerfile
-    container_name: saas-sapico-sts
+    container_name: saas.sapico.sts.identityserver4
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://localhost:8080/healthz || exit 1']
       interval: 30s
@@ -116,10 +115,10 @@ services:
     environment:
       - VIRTUAL_HOST=sts.sapico.local
       - VIRTUAL_PORT=8080
-      - 'ConnectionStrings__ConfigurationDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__PersistedGrantDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__IdentityDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__DataProtectionDbConnection=Host=db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__ConfigurationDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__IdentityDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__DataProtectionDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
       - 'IdentityServerOptions__IssuerUri=https://sts.sapico.local'
       - IdentityServerOptions__Events__RaiseErrorEvents=true
@@ -129,7 +128,7 @@ services:
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
-      db:
+      saas.sapico.sts.identityserver4.db:
         condition: service_healthy
     volumes:
       - './shared/serilog.json:/app/serilog.json'
@@ -139,11 +138,11 @@ services:
         aliases:
           - sts.sapico.local
     restart: unless-stopped
-  db:
+  saas.sapico.sts.identityserver4.db:
     image: 'postgres:18-alpine'
     ports:
       - '5432:5432'
-    container_name: saas-sapico-db
+    container_name: saas.sapico.sts.identityserver4.db
     environment:
       POSTGRES_DB: 'IdentityServer4Admin'
       POSTGRES_USER: 'postgres'
