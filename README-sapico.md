@@ -6,7 +6,12 @@ This document describes customizations specific to the Sapico deployment of Iden
 
 ### Default Provider: PostgreSQL
 
-The Sapico deployment uses **PostgreSQL** as the default database provider instead of SQL Server.
+The Sapico deployment uses **PostgreSQL 17** (Alpine-based) as the default database provider instead of SQL Server.
+
+**Database Persistence:**
+- Database data is stored in a named Docker volume (`dbdata`)
+- Volume persists across container restarts and updates
+- To preserve data during upgrades: `docker-compose down` (data persists), then `docker-compose up --build` (volume remounts)
 
 **Changes made:**
 
@@ -22,13 +27,14 @@ The Sapico deployment uses **PostgreSQL** as the default database provider inste
    ```
 
 3. **Docker Compose** – Updated `docker-compose.yml`:
-   - Database service now uses `postgres:15-alpine` image
+   - Database service uses `postgres:17-alpine` image
    - Port mapping: `5432:5432` (PostgreSQL default port)
    - Environment variables:
      - `POSTGRES_DB=IdentityServer4Admin`
      - `POSTGRES_USER=postgres`
      - `POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}` (default: `postgres`)
-   - All container connection strings use PostgreSQL credentials
+   - Named volume `dbdata` for persistent storage: `/var/lib/postgresql/data`
+   - Restart policy: `unless-stopped` on all services
 
 ### Local Development
 
@@ -142,4 +148,31 @@ If migrations fail:
 - Ensure correct provider is selected in `DatabaseProviderConfiguration`
 - Verify migration assembly is included for PostgreSQL provider
 - Check that `User Id=postgres` (not `sa`) in connection strings
+
+### Upgrading PostgreSQL
+
+To upgrade PostgreSQL to a newer version:
+
+1. Back up your database (the named volume persists data):
+   ```powershell
+   docker-compose down
+   ```
+
+2. Update the PostgreSQL image version in `docker-compose.yml`:
+   ```yaml
+   db:
+     image: 'postgres:18-alpine'  # or newer version
+   ```
+
+3. Restart with new image:
+   ```powershell
+   docker-compose up --build -d
+   ```
+
+4. PostgreSQL will automatically upgrade the database on startup. Verify with:
+   ```powershell
+   docker logs skoruba-identityserver4-db
+   ```
+
+The named volume ensures all data is preserved during the upgrade.
 

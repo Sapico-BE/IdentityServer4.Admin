@@ -56,6 +56,7 @@ services:
       - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
     networks:
       identityserverui: null
+    restart: unless-stopped
   skoruba.identityserver4.admin.api:
     image: '${DOCKER_REGISTRY-}skoruba-identityserver4-admin-api'
     build:
@@ -80,7 +81,7 @@ services:
       - './shared/nginx/certs/cacerts.crt:/usr/local/share/ca-certificates/cacerts.crt'
     networks:
       identityserverui: null
-  skoruba.identityserver4.sts.identity:
+    restart: unless-stopped
     image: '${DOCKER_REGISTRY-}skoruba-identityserver4-sts-identity'
     build:
       context: .
@@ -109,8 +110,9 @@ services:
       identityserverui:
         aliases:
           - sts.sapico.local
+    restart: unless-stopped
   db:
-    image: 'postgres:15-alpine'
+    image: 'postgres:17-alpine'
     ports:
       - '5432:5432'
     container_name: skoruba-identityserver4-db
@@ -119,9 +121,11 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: '${DB_PASSWORD:-postgres}'
     volumes:
+      # Named volume for persistent database storage across container updates
       - 'dbdata:/var/lib/postgresql/data'
     networks:
       identityserverui: null
+    restart: unless-stopped
 volumes:
   dbdata:
     driver: local
