@@ -1,0 +1,159 @@
+# Coolify docker-compose for Sapico IdentityServer4 Admin
+#
+# Domains (configure in Coolify per-service):
+#   sts        -> login.sapico.me
+#   admin      -> login-admin.sapico.me
+#   admin-api  -> login-admin-api.sapico.me
+#
+# Required Coolify environment variables:
+#   STS_DB_PASSWORD   – PostgreSQL password (no default, required)
+#
+# Optional overrides:
+#   STS_DB_NAME       – database name        (default: IdentityServer4Admin)
+#   STS_DB_USER       – database user         (default: postgres)
+#   STS_ADMIN_EMAIL   – seed admin email
+#   STS_ADMIN_PASSWORD – seed admin password
+
+services:
+  sts_db:
+    image: 'postgres:18'
+    restart: unless-stopped
+    environment:
+      - 'POSTGRES_DB=${STS_DB_NAME:-IdentityServer4Admin}'
+      - 'POSTGRES_USER=${STS_DB_USER:-postgres}'
+      - 'POSTGRES_PASSWORD=${STS_DB_PASSWORD}'
+    volumes:
+      - 'sts_pgdata:/var/lib/postgresql'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'pg_isready -U ${STS_DB_USER:-postgres} -d ${STS_DB_NAME:-IdentityServer4Admin}'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  sts:
+    restart: unless-stopped
+    image: 'registry.sapico.me/saas-sapico-sts:stable'
+    command:
+      - dotnet
+      - Skoruba.IdentityServer4.STS.Identity.dll
+    environment:
+      - 'ASPNETCORE_URLS=http://+:8080'
+      - 'ASPNETCORE_ENVIRONMENT=Production'
+      - 'ConnectionStrings__ConfigurationDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__IdentityDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__DataProtectionDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://login-admin.sapico.me'
+      - 'IdentityServerOptions__IssuerUri=https://login.sapico.me'
+      - 'IdentityServerOptions__Events__RaiseErrorEvents=true'
+      - 'IdentityServerOptions__Events__RaiseInformationEvents=true'
+      - 'IdentityServerOptions__Events__RaiseFailureEvents=true'
+      - 'IdentityServerOptions__Events__RaiseSuccessEvents=true'
+    expose:
+      - '8080'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'bash -c "</dev/tcp/localhost/8080" || exit 1'
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+    depends_on:
+      sts_db:
+        condition: service_healthy
+
+  sts_admin:
+    restart: unless-stopped
+    image: 'registry.sapico.me/saas-sapico-sts-admin:stable'
+    command:
+      - dotnet
+      - Skoruba.IdentityServer4.Admin.dll
+      - /seed
+    environment:
+      - 'ASPNETCORE_URLS=http://+:8080'
+      - 'ASPNETCORE_ENVIRONMENT=Production'
+      - 'ConnectionStrings__ConfigurationDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__IdentityDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__AdminLogDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__DataProtectionDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'AdminConfiguration__IdentityAdminRedirectUri=https://login-admin.sapico.me/signin-oidc'
+      - 'AdminConfiguration__IdentityServerBaseUrl=https://login.sapico.me'
+      - 'AdminConfiguration__RequireHttpsMetadata=true'
+      - 'IdentityServerData__Clients__0__ClientUri=https://login-admin.sapico.me'
+      - 'IdentityServerData__Clients__0__RedirectUris__0=https://login-admin.sapico.me/signin-oidc'
+      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://login-admin.sapico.me/signin-oidc'
+      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://login-admin.sapico.me/signout-callback-oidc'
+      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://login-admin.sapico.me'
+      - 'IdentityServerData__Clients__1__RedirectUris__0=https://login-admin-api.sapico.me/swagger/oauth2-redirect.html'
+      - 'Serilog__WriteTo__1__Args__connectionString=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+    expose:
+      - '8080'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'bash -c "</dev/tcp/localhost/8080" || exit 1'
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+    depends_on:
+      sts_db:
+        condition: service_healthy
+      sts:
+        condition: service_healthy
+
+  sts_admin_api:
+    restart: unless-stopped
+    image: 'registry.sapico.me/saas-sapico-sts-admin-api:stable'
+    command:
+      - dotnet
+      - Skoruba.IdentityServer4.Admin.Api.dll
+    environment:
+      - 'ASPNETCORE_URLS=http://+:8080'
+      - 'ASPNETCORE_ENVIRONMENT=Production'
+      - 'ConnectionStrings__ConfigurationDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__IdentityDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__AdminLogDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'ConnectionStrings__DataProtectionDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'AdminApiConfiguration__ApiBaseUrl=https://login-admin-api.sapico.me'
+      - 'AdminApiConfiguration__IdentityServerBaseUrl=https://login.sapico.me'
+      - 'AdminApiConfiguration__RequireHttpsMetadata=true'
+    expose:
+      - '8080'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'bash -c "</dev/tcp/localhost/8080" || exit 1'
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+    depends_on:
+      sts_db:
+        condition: service_healthy
+
+volumes:
+  sts_pgdata: null
