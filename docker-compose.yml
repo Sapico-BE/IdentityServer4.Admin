@@ -32,12 +32,12 @@ services:
       start_period: 40s
     environment:
       - VIRTUAL_HOST=admin.sapico.local
-      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminLogDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__IdentityDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__AdminLogDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
       - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
       - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.sapico.local/signin-oidc'
       - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
@@ -48,7 +48,7 @@ services:
       - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.sapico.local/signout-callback-oidc'
       - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.sapico.local'
       - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.sapico.local/swagger/oauth2-redirect.html'
-      - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'Serilog__WriteTo__1__Args__connectionString=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     command: dotnet Skoruba.IdentityServer4.Admin.dll /seed
@@ -80,12 +80,12 @@ services:
       - AdminApiConfiguration__RequireHttpsMetadata=false
       - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.sapico.local'
       - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
-      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminLogDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__IdentityDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__AdminLogDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__AdminAuditLogDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
@@ -107,10 +107,10 @@ services:
       start_period: 40s
     environment:
       - VIRTUAL_HOST=sts.sapico.local
-      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__IdentityDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};'
+      - 'ConnectionStrings__ConfigurationDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__PersistedGrantDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__IdentityDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
+      - 'ConnectionStrings__DataProtectionDbConnection=Server=db;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=${DB_PASSWORD:-postgres};SSL Mode=Prefer;Trust Server Certificate=true;'
       - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
       - 'IdentityServerOptions__IssuerUri=https://sts.sapico.local'
       - IdentityServerOptions__Events__RaiseErrorEvents=true

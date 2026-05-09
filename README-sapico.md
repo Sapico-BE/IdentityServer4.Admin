@@ -23,10 +23,15 @@ The Sapico deployment uses **PostgreSQL 17** (Alpine-based) as the default datab
    - `src/Skoruba.IdentityServer4.STS.Identity/appsettings.json`
    - `templates/template-publish/content/src/SkorubaIdentityServer4Admin.STS.Identity/appsettings.json`
 
-2. **Connection Strings** – Updated all connection strings to PostgreSQL format:
+2. **Connection Strings** – Updated all connection strings to PostgreSQL format per [Configure-Ubuntu-PostgreSQL-Tutorial.md](docs/Configure-Ubuntu-PostgreSQL-Tutorial.md):
    ```
-   Server=localhost;Database=IdentityServer4Admin;User Id=postgres;Password=postgres
+   Server=localhost;Port=5432;Database=IdentityServer4Admin;User Id=postgres;Password=postgres;SSL Mode=Prefer;Trust Server Certificate=true;
    ```
+   
+   Key PostgreSQL parameters:
+   - `Port=5432` – PostgreSQL default port
+   - `SSL Mode=Prefer` – Use SSL if available, fallback to unencrypted
+   - `Trust Server Certificate=true` – Accept self-signed certificates in Docker
 
 3. **Docker Compose** – Updated `docker-compose.yml`:
    - Database service uses `postgres:17-alpine` image
