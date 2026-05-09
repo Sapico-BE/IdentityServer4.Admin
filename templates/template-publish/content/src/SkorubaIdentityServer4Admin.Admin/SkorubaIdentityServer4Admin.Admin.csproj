@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net10.0</TargetFramework>
 	  <UserSecretsId>8fe260ca-ef4c-4fa3-9364-029146f8d339</UserSecretsId>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -37,12 +37,7 @@
     <PackageReference Include="Skoruba.IdentityServer4.Admin.BusinessLogic.Identity" Version="2.1.0" />
     <PackageReference Include="Skoruba.IdentityServer4.Admin.UI" Version="2.1.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
+<ItemGroup>
     <ProjectReference Include="..\SkorubaIdentityServer4Admin.Admin.EntityFramework.MySql\SkorubaIdentityServer4Admin.Admin.EntityFramework.MySql.csproj" />
     <ProjectReference Include="..\SkorubaIdentityServer4Admin.Admin.EntityFramework.PostgreSQL\SkorubaIdentityServer4Admin.Admin.EntityFramework.PostgreSQL.csproj" />
     <ProjectReference Include="..\SkorubaIdentityServer4Admin.Admin.EntityFramework.SqlServer\SkorubaIdentityServer4Admin.Admin.EntityFramework.SqlServer.csproj" />
@@ -55,6 +50,8 @@
   </ItemGroup>
 
 </Project>
+
+
 
 
 

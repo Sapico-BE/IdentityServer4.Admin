@@ -1,8 +1,8 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityModel;
-using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +13,7 @@ using Skoruba.AuditLogging.EntityFramework.DbContexts;
 using Skoruba.AuditLogging.EntityFramework.Entities;
 using Skoruba.IdentityServer4.Admin.EntityFramework.Configuration.Configuration;
 using Skoruba.IdentityServer4.Admin.EntityFramework.Interfaces;
+using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Helpers
 {
@@ -216,7 +217,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Helpers
                     continue;
                 }
 
-                await context.IdentityResources.AddAsync(resource.ToEntity());
+                await context.IdentityResources.AddAsync(SeedMapper.ToEntity(resource));
             }
 
             foreach (var apiScope in identityServerDataConfiguration.ApiScopes)
@@ -228,7 +229,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Helpers
                     continue;
                 }
 
-                await context.ApiScopes.AddAsync(apiScope.ToEntity());
+                await context.ApiScopes.AddAsync(SeedMapper.ToEntity(apiScope));
             }
 
             foreach (var resource in identityServerDataConfiguration.ApiResources)
@@ -245,9 +246,8 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Helpers
                     s.Value = s.Value.ToSha256();
                 }
 
-                await context.ApiResources.AddAsync(resource.ToEntity());
+                await context.ApiResources.AddAsync(SeedMapper.ToEntity(resource));
             }
-
 
             foreach (var client in identityServerDataConfiguration.Clients)
             {
@@ -267,10 +267,116 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.Shared.Helpers
                     .Select(c => new ClientClaim(c.Type, c.Value))
                     .ToList();
 
-                await context.Clients.AddAsync(client.ToEntity());
+                await context.Clients.AddAsync(SeedMapper.ToEntity(client));
             }
 
             await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Manual mappers replacing IdentityServer4.EntityFramework.Mappers which use AutoMapper
+        /// internally and crash on .NET 10 due to MakeGenericMethod restrictions.
+        /// </summary>
+        private static class SeedMapper
+        {
+            public static IS4Entities.IdentityResource ToEntity(IdentityResource model) =>
+                new IS4Entities.IdentityResource
+                {
+                    Name = model.Name,
+                    DisplayName = model.DisplayName,
+                    Description = model.Description,
+                    Required = model.Required,
+                    Emphasize = model.Emphasize,
+                    ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
+                    Enabled = model.Enabled,
+                    UserClaims = model.UserClaims.Select(c => new IS4Entities.IdentityResourceClaim { Type = c }).ToList(),
+                    Properties = model.Properties.Select(p => new IS4Entities.IdentityResourceProperty { Key = p.Key, Value = p.Value }).ToList(),
+                };
+
+            public static IS4Entities.ApiScope ToEntity(ApiScope model) =>
+                new IS4Entities.ApiScope
+                {
+                    Name = model.Name,
+                    DisplayName = model.DisplayName,
+                    Description = model.Description,
+                    Required = model.Required,
+                    Emphasize = model.Emphasize,
+                    ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
+                    Enabled = model.Enabled,
+                    UserClaims = model.UserClaims.Select(c => new IS4Entities.ApiScopeClaim { Type = c }).ToList(),
+                    Properties = model.Properties.Select(p => new IS4Entities.ApiScopeProperty { Key = p.Key, Value = p.Value }).ToList(),
+                };
+
+            public static IS4Entities.ApiResource ToEntity(ApiResource model) =>
+                new IS4Entities.ApiResource
+                {
+                    Name = model.Name,
+                    DisplayName = model.DisplayName,
+                    Description = model.Description,
+                    Enabled = model.Enabled,
+                    AllowedAccessTokenSigningAlgorithms = model.AllowedAccessTokenSigningAlgorithms.Any()
+                        ? string.Join(",", model.AllowedAccessTokenSigningAlgorithms) : null,
+                    ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
+                    UserClaims = model.UserClaims.Select(c => new IS4Entities.ApiResourceClaim { Type = c }).ToList(),
+                    Scopes = model.Scopes.Select(s => new IS4Entities.ApiResourceScope { Scope = s }).ToList(),
+                    Secrets = model.ApiSecrets.Select(s => new IS4Entities.ApiResourceSecret { Type = s.Type, Value = s.Value, Description = s.Description, Expiration = s.Expiration }).ToList(),
+                    Properties = model.Properties.Select(p => new IS4Entities.ApiResourceProperty { Key = p.Key, Value = p.Value }).ToList(),
+                };
+
+            public static IS4Entities.Client ToEntity(Client model) =>
+                new IS4Entities.Client
+                {
+                    ClientId = model.ClientId,
+                    ClientName = model.ClientName,
+                    Description = model.Description,
+                    ClientUri = model.ClientUri,
+                    LogoUri = model.LogoUri,
+                    Enabled = model.Enabled,
+                    ProtocolType = model.ProtocolType,
+                    RequireClientSecret = model.RequireClientSecret,
+                    RequireConsent = model.RequireConsent,
+                    AllowRememberConsent = model.AllowRememberConsent,
+                    AlwaysIncludeUserClaimsInIdToken = model.AlwaysIncludeUserClaimsInIdToken,
+                    RequirePkce = model.RequirePkce,
+                    AllowPlainTextPkce = model.AllowPlainTextPkce,
+                    RequireRequestObject = model.RequireRequestObject,
+                    AllowAccessTokensViaBrowser = model.AllowAccessTokensViaBrowser,
+                    FrontChannelLogoutUri = model.FrontChannelLogoutUri,
+                    FrontChannelLogoutSessionRequired = model.FrontChannelLogoutSessionRequired,
+                    BackChannelLogoutUri = model.BackChannelLogoutUri,
+                    BackChannelLogoutSessionRequired = model.BackChannelLogoutSessionRequired,
+                    AllowOfflineAccess = model.AllowOfflineAccess,
+                    IdentityTokenLifetime = model.IdentityTokenLifetime,
+                    AllowedIdentityTokenSigningAlgorithms = model.AllowedIdentityTokenSigningAlgorithms.Any()
+                        ? string.Join(",", model.AllowedIdentityTokenSigningAlgorithms) : null,
+                    AccessTokenLifetime = model.AccessTokenLifetime,
+                    AuthorizationCodeLifetime = model.AuthorizationCodeLifetime,
+                    ConsentLifetime = model.ConsentLifetime,
+                    AbsoluteRefreshTokenLifetime = model.AbsoluteRefreshTokenLifetime,
+                    SlidingRefreshTokenLifetime = model.SlidingRefreshTokenLifetime,
+                    RefreshTokenUsage = (int)model.RefreshTokenUsage,
+                    UpdateAccessTokenClaimsOnRefresh = model.UpdateAccessTokenClaimsOnRefresh,
+                    RefreshTokenExpiration = (int)model.RefreshTokenExpiration,
+                    AccessTokenType = (int)model.AccessTokenType,
+                    EnableLocalLogin = model.EnableLocalLogin,
+                    IncludeJwtId = model.IncludeJwtId,
+                    AlwaysSendClientClaims = model.AlwaysSendClientClaims,
+                    ClientClaimsPrefix = model.ClientClaimsPrefix,
+                    PairWiseSubjectSalt = model.PairWiseSubjectSalt,
+                    UserSsoLifetime = model.UserSsoLifetime,
+                    UserCodeType = model.UserCodeType,
+                    DeviceCodeLifetime = model.DeviceCodeLifetime,
+                    NonEditable = false,
+                    AllowedGrantTypes = model.AllowedGrantTypes.Select(g => new IS4Entities.ClientGrantType { GrantType = g }).ToList(),
+                    RedirectUris = model.RedirectUris.Select(u => new IS4Entities.ClientRedirectUri { RedirectUri = u }).ToList(),
+                    PostLogoutRedirectUris = model.PostLogoutRedirectUris.Select(u => new IS4Entities.ClientPostLogoutRedirectUri { PostLogoutRedirectUri = u }).ToList(),
+                    AllowedScopes = model.AllowedScopes.Select(s => new IS4Entities.ClientScope { Scope = s }).ToList(),
+                    ClientSecrets = model.ClientSecrets.Select(s => new IS4Entities.ClientSecret { Type = s.Type, Value = s.Value, Description = s.Description, Expiration = s.Expiration }).ToList(),
+                    Claims = model.Claims.Select(c => new IS4Entities.ClientClaim { Type = c.Type, Value = c.Value }).ToList(),
+                    IdentityProviderRestrictions = model.IdentityProviderRestrictions.Select(r => new IS4Entities.ClientIdPRestriction { Provider = r }).ToList(),
+                    AllowedCorsOrigins = model.AllowedCorsOrigins.Select(o => new IS4Entities.ClientCorsOrigin { Origin = o }).ToList(),
+                    Properties = model.Properties.Select(p => new IS4Entities.ClientProperty { Key = p.Key, Value = p.Value }).ToList(),
+                };
         }
     }
 }

@@ -140,6 +140,8 @@ namespace Skoruba.IdentityServer4.Admin.Api
                 {
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
+                // Health check endpoint for Docker orchestration
+                endpoints.MapGet("/healthz", () => "Healthy");
             });
         }
 

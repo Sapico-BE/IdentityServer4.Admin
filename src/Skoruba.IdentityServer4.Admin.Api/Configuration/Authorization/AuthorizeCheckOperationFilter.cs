@@ -16,6 +16,8 @@ namespace Skoruba.IdentityServer4.Admin.Api.Configuration.Authorization
         }
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
+            if (context.MethodInfo == null) return;
+
             var hasAuthorize = context.MethodInfo.DeclaringType != null && (context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
                                                                             || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any());
 

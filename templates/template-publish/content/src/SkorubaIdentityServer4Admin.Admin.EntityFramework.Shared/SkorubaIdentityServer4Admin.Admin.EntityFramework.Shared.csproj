@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net10.0</TargetFramework>
 	  <Description>DbContexts and Identity entities for the administration of the IdentityServer4 and Asp.Net Core Identity</Description>
   </PropertyGroup>
 
@@ -11,6 +11,7 @@
     <PackageReference Include="Skoruba.IdentityServer4.Admin.EntityFramework.Configuration" Version="2.1.0" />
   </ItemGroup>
 </Project>
+
 
 
 

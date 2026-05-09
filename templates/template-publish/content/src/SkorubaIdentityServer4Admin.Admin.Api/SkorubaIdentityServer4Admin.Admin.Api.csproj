@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net10.0</TargetFramework>
 	  <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>1cc472a2-4e4b-48ce-846b-5219f71fc643</UserSecretsId>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
@@ -68,6 +68,7 @@
   </ItemGroup>
 
 </Project>
+
 
 
 
