@@ -98,7 +98,8 @@ namespace Skoruba.IdentityServer4.STS.Identity.Helpers
             }
             else if (certificateConfiguration.UseTemporarySigningKeyForDevelopment)
             {
-                builder.AddDeveloperSigningCredential();
+                var tempKeyPath = Path.Combine(Path.GetTempPath(), "tempkey.jwk");
+                builder.AddDeveloperSigningCredential(filename: tempKeyPath);
             }
             else
             {
