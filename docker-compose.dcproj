@@ -9,6 +9,7 @@
     <DockerServiceName>skoruba.identityserver4.admin</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include=".github\workflows\deploy.yml" />
     <None Include="docker-compose.vs.debug.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
@@ -16,7 +17,7 @@
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.vs.release.yml">
-      <DependentUpon>docker-compose.yml</DependentUpon>
+      <DependentUpon>docker-compose.yml</Depende ntUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
