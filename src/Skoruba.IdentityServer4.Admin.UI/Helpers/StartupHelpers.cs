@@ -455,7 +455,7 @@ namespace Skoruba.IdentityServer4.Admin.UI.Helpers
                 .AddDbContextCheck<TAuditLoggingDbContext>("AuditLogDbContext")
                 .AddDbContextCheck<TDataProtectionDbContext>("DataProtectionDbContext")
 
-                .AddIdentityServer(new Uri(identityServerUri), "Identity Server");
+                .AddUrlGroup(new Uri($"{identityServerUri}/.well-known/openid-configuration"), "Identity Server");
 
             var serviceProvider = healthChecksBuilder.Services.BuildServiceProvider();
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();

@@ -280,7 +280,7 @@ namespace Skoruba.IdentityServer4.Admin.Api.Helpers
                 .AddDbContextCheck<TLogDbContext>("LogDbContext")
                 .AddDbContextCheck<TAuditLoggingDbContext>("AuditLogDbContext")
                 .AddDbContextCheck<TDataProtectionDbContext>("DataProtectionDbContext")
-                .AddIdentityServer(new Uri(identityServerUri), "Identity Server");
+                .AddUrlGroup(new Uri($"{identityServerUri}/.well-known/openid-configuration"), "Identity Server");
 
             var serviceProvider = services.BuildServiceProvider();
             var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();

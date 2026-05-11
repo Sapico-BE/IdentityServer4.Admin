@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Skoruba.IdentityServer4.Admin.Api.Configuration.Authorization
@@ -31,12 +31,8 @@ namespace Skoruba.IdentityServer4.Admin.Api.Configuration.Authorization
                     new OpenApiSecurityRequirement
                     {
                         [
-                            new OpenApiSecurityScheme {Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "oauth2"}
-                            }
-                        ] = new[] { _adminApiConfiguration.OidcApiName }
+                            new OpenApiSecuritySchemeReference("oauth2")
+                        ] = new List<string> { _adminApiConfiguration.OidcApiName }
                     }
                 };
 
