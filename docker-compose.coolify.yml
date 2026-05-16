@@ -23,7 +23,7 @@ services:
       - 'POSTGRES_USER=${STS_DB_USER:-postgres}'
       - 'POSTGRES_PASSWORD=${STS_DB_PASSWORD}'
     volumes:
-      - 'sts_pgdata:/var/lib/postgresql'
+      - 'sts_pgdata:/var/lib/postgresql/data'
     healthcheck:
       test:
         - CMD-SHELL
@@ -36,9 +36,6 @@ services:
   sts:
     restart: unless-stopped
     image: 'registry.sapico.me/saas-sapico-sts:stable'
-    command:
-      - dotnet
-      - Skoruba.IdentityServer4.STS.Identity.dll
     environment:
       - 'ASPNETCORE_URLS=http://+:8080'
       - 'ASPNETCORE_ENVIRONMENT=Production'
@@ -76,10 +73,7 @@ services:
   sts_admin:
     restart: unless-stopped
     image: 'registry.sapico.me/saas-sapico-sts.admin:stable'
-    command:
-      - dotnet
-      - Skoruba.IdentityServer4.Admin.dll
-      - /seed
+    command: ["/seed"]
     environment:
       - 'ASPNETCORE_URLS=http://+:8080'
       - 'ASPNETCORE_ENVIRONMENT=Production'
@@ -89,6 +83,8 @@ services:
       - 'ConnectionStrings__AdminLogDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
       - 'ConnectionStrings__AdminAuditLogDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
       - 'ConnectionStrings__DataProtectionDbConnection=Host=sts_db;Database=${STS_DB_NAME:-IdentityServer4Admin};Username=${STS_DB_USER:-postgres};Password=${STS_DB_PASSWORD}'
+      - 'DatabaseMigrationsConfiguration__ApplyDatabaseMigrations=true'
+      - 'SeedConfiguration__ApplySeed=true'
       - 'AdminConfiguration__IdentityAdminRedirectUri=https://login-admin.sapico.me/signin-oidc'
       - 'AdminConfiguration__IdentityServerBaseUrl=https://login.sapico.me'
       - 'AdminConfiguration__RequireHttpsMetadata=true'
@@ -105,10 +101,10 @@ services:
       test:
         - CMD-SHELL
         - 'wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1'
-      interval: 5s
+      interval: 10s
       timeout: 5s
-      retries: 6
-      start_period: 30s
+      retries: 12
+      start_period: 120s
     deploy:
       update_config:
         order: start-first
@@ -121,9 +117,6 @@ services:
   sts_admin_api:
     restart: unless-stopped
     image: 'registry.sapico.me/saas-sapico-sts.admin.api:stable'
-    command:
-      - dotnet
-      - Skoruba.IdentityServer4.Admin.Api.dll
     depends_on:
       sts_db:
         condition: service_healthy
