@@ -1,0 +1,10 @@
+<Project>
+  <ItemGroup>
+    <!--
+      Force AutoMapper 13.0.1 (last MIT-licensed version) across all projects.
+      Cnblogs.IdentityServer4.* 4.2.0 packages are recompiled against AM 13
+      so the ConstructUsing/IMappingExpressionBase incompatibility is resolved.
+    -->
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+</Project>
