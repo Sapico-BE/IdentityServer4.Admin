@@ -17,7 +17,7 @@
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.vs.release.yml">
-      <DependentUpon>docker-compose.yml</Depende ntUpon>
+      <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
