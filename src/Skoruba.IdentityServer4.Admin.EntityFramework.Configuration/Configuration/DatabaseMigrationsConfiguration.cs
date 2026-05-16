@@ -2,7 +2,7 @@
 {
     public class DatabaseMigrationsConfiguration
     {
-        public bool ApplyDatabaseMigrations { get; set; } = false;
+        public bool ApplyDatabaseMigrations { get; set; } = true;
 
 		public string ConfigurationDbMigrationsAssembly { get; set; }
 

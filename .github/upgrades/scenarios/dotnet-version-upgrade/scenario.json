@@ -1,0 +1,16 @@
+{
+  "scenarioId": "dotnet-version-upgrade",
+  "operationId": "067c7a82-9414-4553-924a-13a965a75e10",
+  "description": "Upgrade .NET projects to newer .NET versions",
+  "startTime": "2026-05-10T21:15:55.6757935Z",
+  "lastUpdateTime": "2026-05-11T18:25:51.1582207Z",
+  "stage": "Assessment",
+  "properties": {
+    "currentTask": "03-docker-build-verification",
+    "task:03-docker-build-verification:startedAt": "2026-05-11T18:25:51.1576735Z",
+    "task:01-update-packages:startedAt": "2026-05-10T21:46:00.1875068Z",
+    "UpgradeTargetFramework": "net10.0",
+    "task:02-fix-build-issues:startedAt": "2026-05-11T18:20:21.5691987Z"
+  },
+  "folderPath": ""
+}

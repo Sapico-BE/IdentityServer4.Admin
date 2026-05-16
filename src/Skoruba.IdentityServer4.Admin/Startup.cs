@@ -77,7 +77,7 @@ namespace Skoruba.IdentityServer4.Admin
             }
 
             // Set migration assembly for application of db migrations
-            var migrationsAssembly = MigrationAssemblyConfiguration.GetMigrationAssemblyByProvider(options.DatabaseProvider);
+            var migrationsAssembly = MigrationAssemblyConfiguration.GetMigrationAssemblyByProvider();
             options.DatabaseMigrations.SetMigrationsAssemblies(migrationsAssembly);
 
             // Use production DbContexts and auth services.

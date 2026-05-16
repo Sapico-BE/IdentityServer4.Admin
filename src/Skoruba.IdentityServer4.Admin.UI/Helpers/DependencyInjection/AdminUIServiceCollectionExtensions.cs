@@ -116,7 +116,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.RegisterDbContexts<TIdentityDbContext, TIdentityServerDbContext,
                     TPersistedGrantDbContext, TLogDbContext, TAuditLogDbContext,
-                    TDataProtectionDbContext, TAuditLog>(options.ConnectionStrings, options.DatabaseProvider, options.DatabaseMigrations);
+                    TDataProtectionDbContext, TAuditLog>(options.ConnectionStrings, options.DatabaseMigrations);
             }
             else
             {
@@ -185,7 +185,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var healthChecksBuilder = options.HealthChecksBuilderFactory?.Invoke(services) ?? services.AddHealthChecks();
             healthChecksBuilder.AddIdSHealthChecks<TIdentityServerDbContext, TPersistedGrantDbContext,
                 TIdentityDbContext, TLogDbContext, TAuditLogDbContext,
-                TDataProtectionDbContext, TAuditLog>(options.Admin, options.ConnectionStrings, options.DatabaseProvider);
+                TDataProtectionDbContext, TAuditLog>(options.Admin, options.ConnectionStrings);
 
             // Adds a startup filter for further middleware configuration.
             services.AddSingleton(options.Testing);

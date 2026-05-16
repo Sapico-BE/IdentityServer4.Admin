@@ -26,11 +26,6 @@ namespace Microsoft.Extensions.DependencyInjection
 		public AdminConfiguration Admin { get; set; } = new AdminConfiguration();
 
 		/// <summary>
-		/// The settings for the database provider.
-		/// </summary>
-		public DatabaseProviderConfiguration DatabaseProvider { get; set; } = new DatabaseProviderConfiguration();
-
-		/// <summary>
 		/// The settings for database migrations.
 		/// </summary>
 		public DatabaseMigrationsConfiguration DatabaseMigrations { get; set; } = new DatabaseMigrationsConfiguration();
@@ -94,7 +89,6 @@ namespace Microsoft.Extensions.DependencyInjection
 			configuration.GetSection(nameof(TestingConfiguration)).Bind(Testing);
 			configuration.GetSection(ConfigurationConsts.ConnectionStringsKey).Bind(ConnectionStrings);
 			configuration.GetSection(nameof(AdminConfiguration)).Bind(Admin);
-			configuration.GetSection(nameof(DatabaseProviderConfiguration)).Bind(DatabaseProvider);
 			configuration.GetSection(nameof(DatabaseMigrationsConfiguration)).Bind(DatabaseMigrations);
 			configuration.GetSection(nameof(AuditLoggingConfiguration)).Bind(AuditLogging);
 			configuration.GetSection(nameof(CultureConfiguration)).Bind(Culture);

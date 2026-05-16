@@ -9,6 +9,7 @@
     <DockerServiceName>skoruba.identityserver4.admin</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include=".github\workflows\deploy.yml" />
     <None Include="docker-compose.vs.debug.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
@@ -20,5 +21,8 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="shared\nginx\vhost.d\admin.sapico.local_location" />
+    <None Include="shared\nginx\vhost.d\sts.sapico.local_location" />
+    <None Include="src\Directory.Build.props" />
   </ItemGroup>
 </Project>

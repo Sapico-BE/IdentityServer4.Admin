@@ -5,5 +5,9 @@
 	  <Description>Shared Business Logic layer for the administration of the IdentityServer4 and Asp.Net Core Identity</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.7" />
+  </ItemGroup>
+
 </Project>
 
