@@ -11,8 +11,8 @@ using Skoruba.IdentityServer4.Admin.EntityFramework.Shared.DbContexts;
 namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.DataProtection
 {
     [DbContext(typeof(IdentityServerDataProtectionDbContext))]
-    [Migration("20260516104444_UpdateToNet10")]
-    partial class UpdateToNet10
+    [Migration("20260516145410_DbInit")]
+    partial class DbInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

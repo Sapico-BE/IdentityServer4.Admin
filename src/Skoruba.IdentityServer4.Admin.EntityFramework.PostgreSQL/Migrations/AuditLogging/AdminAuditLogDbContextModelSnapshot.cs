@@ -37,7 +37,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Au
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Data")
                         .HasColumnType("text");

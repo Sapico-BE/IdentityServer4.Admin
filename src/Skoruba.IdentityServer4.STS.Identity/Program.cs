@@ -12,6 +12,8 @@ namespace Skoruba.IdentityServer4.STS.Identity
     {
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var configuration = GetConfiguration(args);
 
             Log.Logger = new LoggerConfiguration()

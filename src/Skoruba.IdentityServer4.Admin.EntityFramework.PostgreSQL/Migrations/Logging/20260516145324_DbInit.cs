@@ -2,25 +2,29 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
+#nullable disable
+
 namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Logging
 {
+    /// <inheritdoc />
     public partial class DbInit : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "Log",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Message = table.Column<string>(nullable: true),
-                    MessageTemplate = table.Column<string>(nullable: true),
-                    Level = table.Column<string>(maxLength: 128, nullable: true),
-                    TimeStamp = table.Column<DateTimeOffset>(nullable: false),
-                    Exception = table.Column<string>(nullable: true),
-                    LogEvent = table.Column<string>(nullable: true),
-                    Properties = table.Column<string>(nullable: true)
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    MessageTemplate = table.Column<string>(type: "text", nullable: true),
+                    Level = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    TimeStamp = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Exception = table.Column<string>(type: "text", nullable: true),
+                    LogEvent = table.Column<string>(type: "text", nullable: true),
+                    Properties = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,6 +32,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Lo
                 });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

@@ -34,7 +34,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Id
                         .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -51,7 +51,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Id
                         .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("Expiration")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("SessionId")
                         .HasMaxLength(100)
@@ -83,10 +83,10 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Id
                         .HasColumnType("character varying(200)");
 
                     b.Property<DateTime?>("ConsumedTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -98,7 +98,7 @@ namespace Skoruba.IdentityServer4.Admin.EntityFramework.PostgreSQL.Migrations.Id
                         .HasColumnType("character varying(200)");
 
                     b.Property<DateTime?>("Expiration")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("SessionId")
                         .HasMaxLength(100)
