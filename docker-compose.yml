@@ -15,8 +15,8 @@ services:
       identityserverui:
         aliases:
           - sts.sapico.local
-          - admin.sapico.local
-          - admin-api.sapico.local
+          - sts-admin.sapico.local
+          - sts-admin-api.sapico.local
     restart: always
   saas.sapico.sts.identityserver4.admin:
     image: '${DOCKER_REGISTRY-}saas-sapico-sts-admin'
@@ -31,7 +31,7 @@ services:
       retries: 3
       start_period: 40s
     environment:
-      - VIRTUAL_HOST=admin.sapico.local
+      - VIRTUAL_HOST=sts-admin.sapico.local
       - VIRTUAL_PORT=8080
       - 'ConnectionStrings__ConfigurationDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
@@ -39,15 +39,15 @@ services:
       - 'ConnectionStrings__AdminLogDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__AdminAuditLogDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__DataProtectionDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'AdminConfiguration__IdentityAdminRedirectUri=https://admin.sapico.local/signin-oidc'
+      - 'AdminConfiguration__IdentityAdminRedirectUri=https://sts-admin.sapico.local/signin-oidc'
       - 'AdminConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
       - AdminConfiguration__RequireHttpsMetadata=false
-      - 'IdentityServerData__Clients__0__ClientUri=https://admin.sapico.local'
-      - 'IdentityServerData__Clients__0__RedirectUris__0=https://admin.sapico.local/signin-oidc'
-      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://admin.sapico.local/signin-oidc'
-      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://admin.sapico.local/signout-callback-oidc'
-      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://admin.sapico.local'
-      - 'IdentityServerData__Clients__1__RedirectUris__0=https://admin-api.sapico.local/swagger/oauth2-redirect.html'
+      - 'IdentityServerData__Clients__0__ClientUri=https://sts-admin.sapico.local'
+      - 'IdentityServerData__Clients__0__RedirectUris__0=https://sts-admin.sapico.local/signin-oidc'
+      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://sts-admin.sapico.local/signout-oidc'
+      - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://sts-admin.sapico.local/signout-callback-oidc'
+      - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://sts-admin.sapico.local'
+      - 'IdentityServerData__Clients__1__RedirectUris__0=https://sts-admin-api.sapico.local/swagger/oauth2-redirect.html'
       - 'Serilog__WriteTo__1__Args__connectionString=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - DockerConfiguration__UpdateCaCertificate=true
       - ASPNETCORE_ENVIRONMENT=Development
@@ -78,10 +78,10 @@ services:
       retries: 3
       start_period: 40s
     environment:
-      - VIRTUAL_HOST=admin-api.sapico.local
+      - VIRTUAL_HOST=sts-admin-api.sapico.local
       - VIRTUAL_PORT=8080
       - AdminApiConfiguration__RequireHttpsMetadata=false
-      - 'AdminApiConfiguration__ApiBaseUrl=https://admin-api.sapico.local'
+      - 'AdminApiConfiguration__ApiBaseUrl=https://sts-admin-api.sapico.local'
       - 'AdminApiConfiguration__IdentityServerBaseUrl=https://sts.sapico.local'
       - 'ConnectionStrings__ConfigurationDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__PersistedGrantDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
@@ -119,7 +119,7 @@ services:
       - 'ConnectionStrings__PersistedGrantDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__IdentityDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
       - 'ConnectionStrings__DataProtectionDbConnection=Host=saas.sapico.sts.identityserver4.db;Port=5432;Database=IdentityServer4Admin;Username=postgres;Password=${DB_PASSWORD:-postgres};'
-      - 'AdminConfiguration__IdentityAdminBaseUrl=https://admin.sapico.local'
+      - 'AdminConfiguration__IdentityAdminBaseUrl=https://sts-admin.sapico.local'
       - 'IdentityServerOptions__IssuerUri=https://sts.sapico.local'
       - IdentityServerOptions__Events__RaiseErrorEvents=true
       - IdentityServerOptions__Events__RaiseInformationEvents=true

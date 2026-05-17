@@ -84,7 +84,7 @@
             {
                 "ClientId": "skoruba_identity_admin",
                 "ClientName": "skoruba_identity_admin",
-                "ClientUri": "https://admin.sapico.local",
+                "ClientUri": "https://sts-admin.sapico.local",
                 "AllowedGrantTypes": [
                     "authorization_code"
                 ],
@@ -95,14 +95,14 @@
                     }
                 ],
                 "RedirectUris": [
-                    "https://admin.sapico.local/signin-oidc"
+                    "https://sts-admin.sapico.local/signin-oidc"
                 ],
-                "FrontChannelLogoutUri": "https://admin.sapico.local/signout-oidc",
+                "FrontChannelLogoutUri": "https://sts-admin.sapico.local/signout-oidc",
                 "PostLogoutRedirectUris": [
-                    "https://admin.sapico.local/signout-callback-oidc"
+                    "https://sts-admin.sapico.local/signout-callback-oidc"
                 ],
                 "AllowedCorsOrigins": [
-                    "https://admin.sapico.local"
+                    "https://sts-admin.sapico.local"
                 ],
                 "AllowedScopes": [
                     "openid",
@@ -120,13 +120,13 @@
                 "RequireClientSecret": false,
                 "RequirePkce": true,
                 "RedirectUris": [
-                    "https://admin-api.sapico.local/swagger/oauth2-redirect.html"
+                    "https://sts-admin-api.sapico.local/swagger/oauth2-redirect.html"
                 ],
                 "AllowedScopes": [
                     "skoruba_identity_admin_api"
                 ],
                 "AllowedCorsOrigins": [
-                    "https://admin-api.skoruba.local"
+                    "https://sts-admin-api.sapico.local"
                 ]
             }
         ]

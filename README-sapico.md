@@ -78,8 +78,8 @@ Server=db;Database=IdentityServer4Admin;User Id=postgres;Password=postgres;
 
 ### Hostnames (Docker)
 
-- **Admin UI**: `https://admin.sapico.local`
-- **Admin API**: `https://admin-api.sapico.local`
+- **Admin UI**: `https://sts-admin.sapico.local`
+- **Admin API**: `https://sts-admin-api.sapico.local`
 - **STS**: `https://sts.sapico.local`
 
 ### Local Development Ports
