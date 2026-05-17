@@ -64,6 +64,8 @@ services:
         order: start-first
         failure_action: rollback
         delay: 5s
+    labels:
+      - "traefik.http.services.sts.loadbalancer.server.port=8080"
     depends_on:
       sts_db:
         condition: service_healthy
@@ -73,7 +75,6 @@ services:
   sts_admin:
     restart: unless-stopped
     image: 'registry.sapico.me/saas-sapico-sts-admin:stable'
-    command: [ "/seed" ]
     environment:
       - 'ASPNETCORE_URLS=http://+:8080'
       - 'ASPNETCORE_ENVIRONMENT=Production'
@@ -90,7 +91,7 @@ services:
       - 'AdminConfiguration__RequireHttpsMetadata=true'
       - 'IdentityServerData__Clients__0__ClientUri=https://login-admin.sapico.me'
       - 'IdentityServerData__Clients__0__RedirectUris__0=https://login-admin.sapico.me/signin-oidc'
-      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://login-admin.sapico.me/signin-oidc'
+      - 'IdentityServerData__Clients__0__FrontChannelLogoutUri=https://login-admin.sapico.me/signout-oidc'
       - 'IdentityServerData__Clients__0__PostLogoutRedirectUris__0=https://login-admin.sapico.me/signout-callback-oidc'
       - 'IdentityServerData__Clients__0__AllowedCorsOrigins__0=https://login-admin.sapico.me'
       - 'IdentityServerData__Clients__1__RedirectUris__0=https://login-admin-api.sapico.me/swagger/oauth2-redirect.html'
@@ -110,6 +111,8 @@ services:
         order: start-first
         failure_action: rollback
         delay: 5s
+    labels:
+      - "traefik.http.services.sts_admin.loadbalancer.server.port=8080"
     depends_on:
       sts_db:
         condition: service_healthy
@@ -149,6 +152,8 @@ services:
         order: start-first
         failure_action: rollback
         delay: 5s
+    labels:
+      - "traefik.http.services.sts_admin_api.loadbalancer.server.port=8080"
 
 volumes:
   sts_pgdata: null
