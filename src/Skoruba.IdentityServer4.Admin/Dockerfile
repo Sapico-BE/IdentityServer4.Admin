@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-RUN apt-get update && apt-get install -y --no-install-recommends bash ca-certificates wget && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends bash ca-certificates wget libgssapi-krb5-2 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
