@@ -35,7 +35,7 @@ services:
 
   sts:
     restart: unless-stopped
-    image: 'registry.sapico.me/saas-sapico-sts:stable'
+    image: 'registry.sapico.me/saas-sapico-sts-web:stable'
     environment:
       - 'ASPNETCORE_URLS=http://+:8080'
       - 'ASPNETCORE_ENVIRONMENT=Production'
@@ -72,8 +72,8 @@ services:
 
   sts_admin:
     restart: unless-stopped
-    image: 'registry.sapico.me/saas-sapico-sts.admin:stable'
-    command: ["/seed"]
+    image: 'registry.sapico.me/saas-sapico-sts-admin:stable'
+    command: [ "/seed" ]
     environment:
       - 'ASPNETCORE_URLS=http://+:8080'
       - 'ASPNETCORE_ENVIRONMENT=Production'
@@ -116,7 +116,7 @@ services:
 
   sts_admin_api:
     restart: unless-stopped
-    image: 'registry.sapico.me/saas-sapico-sts.admin.api:stable'
+    image: 'registry.sapico.me/saas-sapico-sts-admin.api:stable'
     depends_on:
       sts_db:
         condition: service_healthy
