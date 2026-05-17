@@ -28,61 +28,64 @@ jobs:
     name: Deploy saas-sapico-sts
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:10.0
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish saas-sapico-sts
-        env:
-          DOTNET_CONTAINER_REGISTRY_UNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOTNET_CONTAINER_REGISTRY_PWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY_ENDPOINT }} -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and push saas-sapico-sts
         run: |
-          dotnet publish src/Skoruba.IdentityServer4.STS.Identity/Skoruba.IdentityServer4.STS.Identity.csproj \
-            --os linux --arch x64 /t:PublishContainer \
-            -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-sts \
-            "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
-            "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
+          docker build -f src/Skoruba.IdentityServer4.STS.Identity/Dockerfile \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.type=identity" \
+            --label "org.opencontainers.image.audience=internal" \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts:${{ github.sha }} \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts:${{ github.ref_name }} \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts:latest \
+            .
+          docker push ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts --all-tags
 
   deploy-admin:
     name: Deploy saas-sapico-sts.admin
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:10.0
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish saas-sapico-sts.admin
-        env:
-          DOTNET_CONTAINER_REGISTRY_UNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOTNET_CONTAINER_REGISTRY_PWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY_ENDPOINT }} -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and push saas-sapico-sts.admin
         run: |
-          dotnet publish src/Skoruba.IdentityServer4.Admin/Skoruba.IdentityServer4.Admin.csproj \
-            --os linux --arch x64 /t:PublishContainer \
-            -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-sts.admin \
-            "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
-            "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
+          docker build -f src/Skoruba.IdentityServer4.Admin/Dockerfile \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.type=identity" \
+            --label "org.opencontainers.image.audience=internal" \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin:${{ github.sha }} \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin:${{ github.ref_name }} \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin:latest \
+            .
+          docker push ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin --all-tags
 
   deploy-admin-api:
     name: Deploy saas-sapico-sts.admin.api
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:10.0
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish saas-sapico-sts.admin.api
-        env:
-          DOTNET_CONTAINER_REGISTRY_UNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOTNET_CONTAINER_REGISTRY_PWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY_ENDPOINT }} -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and push saas-sapico-sts.admin.api
         run: |
-          dotnet publish src/Skoruba.IdentityServer4.Admin.Api/Skoruba.IdentityServer4.Admin.Api.csproj \
-            --os linux --arch x64 /t:PublishContainer \
-            -p:ContainerRegistry=${{ env.DOCKER_REGISTRY_ENDPOINT }} \
-            -p:ContainerRepository=saas-sapico-sts.admin.api \
-            "-p:ContainerLabels=\"org.opencontainers.image.revision=${{ github.sha }};org.opencontainers.image.type=identity;org.opencontainers.image.audience=internal\"" \
-            "-p:ContainerImageTags=\"${{ github.sha }};${{ github.ref_name }};latest\""
+          docker build -f src/Skoruba.IdentityServer4.Admin.Api/Dockerfile \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.type=identity" \
+            --label "org.opencontainers.image.audience=internal" \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin.api:${{ github.sha }} \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin.api:${{ github.ref_name }} \
+            -t ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin.api:latest \
+            .
+          docker push ${{ env.DOCKER_REGISTRY_ENDPOINT }}/saas-sapico-sts.admin.api --all-tags
