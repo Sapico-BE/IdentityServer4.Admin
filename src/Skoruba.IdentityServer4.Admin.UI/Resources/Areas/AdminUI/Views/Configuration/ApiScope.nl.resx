@@ -14,8 +14,8 @@
   <data name="ButtonAddApiScope" xml:space="preserve">
     <value>Sla Api Scope op</value>
   </data>
-  <data name="ButtonAddNewApiScope" xml:space="preserve">
-    <value>Voeg Api Scope toe</value>
+  <data name="ManageApiScopeProperties" xml:space="preserve">
+    <value>Beheer Api Scope Eigenschappen</value>
   </data>
   <data name="NavigationApiResources" xml:space="preserve">
     <value>Api Resources</value>
@@ -51,12 +51,12 @@
     <value>Voorgestelde items:</value>
   </data>
   <data name="TableButtonEdit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Bewerken</value>
   </data>
   <data name="TableButtonRemove" xml:space="preserve">
     <value>Verwijder</value>
   </data>
   <data name="TableName" xml:space="preserve">
-    <value>Name</value>
+    <value>Naam</value>
   </data>
 </root>
