@@ -68,6 +68,7 @@ namespace Skoruba.IdentityServer4.Admin.Api.Helpers
 
                         builder.AllowAnyHeader();
                         builder.AllowAnyMethod();
+                        builder.WithExposedHeaders("X-Pagination", "X-Total-Count", "Content-Disposition", "Location", "WWW-Authenticate");
                     });
             });
 
