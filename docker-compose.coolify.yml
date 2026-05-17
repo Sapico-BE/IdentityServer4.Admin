@@ -23,7 +23,7 @@ services:
       - 'POSTGRES_USER=${STS_DB_USER:-postgres}'
       - 'POSTGRES_PASSWORD=${STS_DB_PASSWORD}'
     volumes:
-      - 'sts_pgdata:/var/lib/postgresql/data'
+      - 'sts_pgdata:/var/lib/postgresql'
     healthcheck:
       test:
         - CMD-SHELL

@@ -34,8 +34,8 @@ Primary source folders:
 
 In Docker topology (see `docker-compose.yml`), nginx routes three public hostnames:
 
-- `https://admin.sapico.local` -> Admin Web
-- `https://admin-api.sapico.local` -> Admin API
+- `https://sts-admin.sapico.local` -> Admin Web
+- `https://sts-admin-api.sapico.local` -> Admin API
 - `https://sts.sapico.local` -> STS (IdentityServer + Identity UI)
 
 In local development defaults (appsettings):
@@ -43,6 +43,18 @@ In local development defaults (appsettings):
 - Admin Web base URL: `https://localhost:44303`
 - Admin API base URL: `https://localhost:44302`
 - STS base URL: `https://localhost:44310`
+
+## Environment Hostnames
+
+| Environment | STS | Admin | Admin API |
+|---|---|---|---|
+| Local | `sts.sapico.local` | `sts-admin.sapico.local` | `sts-admin-api.sapico.local` |
+| Preprod | `login.sapico.me` | `login-admin.sapico.me` | `login-admin-api.sapico.me` |
+| Prod | `sts.sapico.me` | `sts-admin.sapico.me` | `sts-admin-api.sapico.me` |
+
+- Local uses `docker-compose.yml` with nginx-proxy and self-signed `*.sapico.local` wildcard cert (mkcert).
+- Preprod/Prod uses `docker-compose.coolify.yml` with Traefik.
+- Hosts file entries needed for local: `127.0.0.1 sapico.local sts.sapico.local sts-admin.sapico.local sts-admin-api.sapico.local`
 
 ## App Documentation
 
@@ -175,3 +187,9 @@ Docker image names use **`saas-sapico-sts-`** as prefix with dash-separated suff
 - Migrations: use `build/add-migrations.ps1 -migration <Name> -migrationProviderName <Provider>`.
 - Database provider switching: `DatabaseProviderConfiguration.ProviderType` in `appsettings.json`.
 - Integration tests use in-memory databases with cookie auth stubs.
+
+## Learnings
+
+- PostgreSQL 18+ volume mount: `/var/lib/postgresql`, not `/var/lib/postgresql/data`.
+- Client secret migration: recompute `SHA256(UTF8(plaintext))` → base64. Don't copy old hashes.
+- Grant types: use `authorization_code` + PKCE. Don't keep legacy `hybrid`/`implicit`.
