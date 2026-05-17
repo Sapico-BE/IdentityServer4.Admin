@@ -73,10 +73,12 @@ namespace Skoruba.IdentityServer4.STS.Identity
             app.UsePathBase(Configuration.GetValue<string>("BasePath"));
 
             app.UseStaticFiles();
-            UseAuthentication(app);
 
-            // Add custom security headers
+            // Add custom security headers (must be before UseIdentityServer so
+            // ForwardedHeaders sets the correct scheme for discovery endpoints)
             app.UseSecurityHeaders(Configuration);
+
+            UseAuthentication(app);
 
             app.UseMvcLocalizationServices();
 
