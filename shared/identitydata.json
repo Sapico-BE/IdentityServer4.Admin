@@ -9,7 +9,7 @@
       {
         "Username": "admin",
         "Password": "Pa$$word123",
-        "Email": "admin@sapico.me"
+        "Email": "admin@sapico.me",
         "Roles": [
           "SkorubaIdentityAdminAdministrator"
         ],
